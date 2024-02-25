@@ -19,6 +19,7 @@ local PangoCairo = lgi.PangoCairo
 local gears_debug = require("gears.debug")
 local Gio = require("lgi").Gio
 local protected_call = require("gears.protected_call")
+local gfs = require("gears.filesystem")
 
 local xresources = require("beautiful.xresources")
 local theme_assets = require("beautiful.theme_assets")
@@ -37,7 +38,6 @@ local descs = setmetatable({}, { __mode = 'k' })
 local fonts = setmetatable({}, { __mode = 'v' })
 local active_font
 
-
 --- The default font.
 beautiful.font = "ui-sans-serif 5 bold"
 
@@ -79,7 +79,7 @@ beautiful.fg_focus = beautiful.fg_normal
 -- @beautiful beautiful.border_marked
 
 --- The wallpaper path.
--- beautiful.wallpaper = awful.util.get_configuration_dir() .. "wallpaper/rose_pine_shape.png"
+beautiful.wallpaper = gfs.get_configuration_dir() .. "wallpaper/rose_pine_shape.png"
 -- beautiful.wallpaper = awful.util.get_configuration_dir() .. "path/to/wallpaper.png"
 
 -- The icon theme name.
@@ -105,77 +105,9 @@ beautiful.border_width = 3
 --- The default clients border color.
 -- Note that only solid colors are supported.
 beautiful.border_normal = beautiful.bg_normal
-beautiful.border_focus = beautiful.fg_occupied
-
---- The default font.
-beautiful.font = "ui-sans-serif 5 bold"
-
--- The default background color.
-beautiful.bg_normal = "#f6c177"
-
--- The default focused element background color.
-beautiful.bg_focus = "#ea9d34"
-
--- The default urgent element background color.
--- @beautiful beautiful.bg_urgent
-
--- The default minimized element background color.
--- @beautiful beautiful.bg_minimize
-
--- The system tray background color.
--- Please note that only solid colors are currently supported.
--- @beautiful beautiful.bg_systray
-
--- The default focused element foreground (text) color.
-beautiful.fg_normal = "#232136"
-
--- The default focused element foreground (text) color.
-beautiful.fg_focus = beautiful.fg_normal
-
--- The default urgent element foreground (text) color.
--- @beautiful beautiful.fg_urgent
-
--- The default minimized element foreground (text) color.
--- @beautiful beautiful.fg_minimize
-
-
---- The focused client border color.
--- Note that only solid colors are supported.
--- @beautiful beautiful.border_focus
-
---- The marked clients border color.
--- Note that only solid colors are supported.
--- @beautiful beautiful.border_marked
-
---- The wallpaper path.
--- beautiful.wallpaper = awful.util.get_configuration_dir() .. "wallpaper/rose_pine_shape.png"
--- beautiful.wallpaper = awful.util.get_configuration_dir() .. "path/to/wallpaper.png"
-
--- The icon theme name.
--- It has to be a directory in `/usr/share/icons` or an XDG icon folder.
--- @beautiful beautiful.icon_theme
-
---- The Awesome icon path.
--- @beautiful beautiful.awesome_icon
-
---- The current theme path (if any)
--- @tfield string beautiful.theme_path
-
--- personal options
-beautiful.fg_occupied = "#eb6f92"
-beautiful.bg_focus = "#ea9d34"
---- The gap between clients.
--- @beautiful beautiful.useless_gap
-beautiful.useless_gap = 10
-
---- The client border width.
-beautiful.border_width = 3
-
---- The default clients border color.
--- Note that only solid colors are supported.
-beautiful.border_normal = beautiful.bg_normal
-beautiful.border_focus = beautiful.fg_occupied
-
+beautiful.border_focus = "#eb6f92"
+--- Load a font from a string or a font description.
+--
 -- @see https://developer.gnome.org/pango/stable/pango-Fonts.html#pango-font-description-from-string
 -- @tparam string|lgi.Pango.FontDescription name Font, which can be a
 --   string or a lgi.Pango.FontDescription.
