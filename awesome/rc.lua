@@ -99,10 +99,7 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- Keyboard map indicator and switcher
 mykeyboardlayout = awful.widget.keyboardlayout()
 
-local date = {
-    font = beautiful.fg_normal,
-    widget = wibox.widget.textclock("%a %d %b %Y")
-}
+local date = wibox.widget.textclock("%a %d %b %Y")
 
 local time = {
     font = beautiful.fg_normal,
@@ -186,6 +183,16 @@ local wrap_bg = function(widgets, opts)
 		widget = wibox.container.background,
 	})
 end
+local datetime_widget = {
+    layout = wibox.layout.fixed.horizontal,
+    time,
+    date,
+    spacing = 5
+}
+
+local month_calendar = awful.widget.calendar_popup.year()
+month_calendar.position = "cc"
+month_calendar.screen = awful.screen.focused()
 
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
@@ -298,11 +305,7 @@ awful.screen.connect_for_each_screen(function(s)
                         volume_widget,
                         custom_widgets.battery(),
                         spacing = 5 }),
-                    wrap_bg({
-                        layout = wibox.layout.fixed.horizontal,
-                        time,
-                        date,
-                        spacing = 5 }),
+                    wrap_bg(datetime_widget),
                 },
             }
         },
@@ -450,7 +453,11 @@ globalkeys = gears.table.join(
 
     awful.key({}, "XF87AudioMute" , function() utils.volume.toggle() end, { description = "Toggle mute", group = "System configurations" }),
 
-    awful.key({}, "Print", function() awful.util.spawn_with_shell("shutter -s") end, { description = "Screenshot", group = "System options"})
+    awful.key({}, "Print", function() awful.util.spawn_with_shell("shutter -s") end, { description = "Screenshot", group = "System options"}),
+
+    awful.key({ modkey }, "c", function()
+        month_calendar:toggle()
+    end, { description = "Toggle calendar", group = "System options"})
 )
 
 clientkeys = gears.table.join(
