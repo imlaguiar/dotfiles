@@ -109,8 +109,6 @@ local time = {
 local volume_widget = custom_widgets.volume()
 utils.volume.set_widget(volume_widget)
 
-local bluetooth = custom_widgets.bluetooth.new()
-
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
                     awful.button({ }, 1, function(t) t:view_only() end),
@@ -251,67 +249,43 @@ awful.screen.connect_for_each_screen(function(s)
         },
     }
 
-    -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist {
-        screen  = s,
-        filter  = awful.widget.tasklist.filter.currenttags,
-        buttons = tasklist_buttons,
-        
-        style = {
-            border_width = 5,
-            border_color = "#eb6f92",
-            shape = gears.shape.rounded_bar,
 
-            fg_normal = "#232136",
-            bg_normal = "#f6c177",
-
-            bg_focus = "#ea9d34",
-            fg_focus = "#232136",
-
-        -- bg = "#f6c177",
-        -- fg = "#232136",
-        },
-
-        -- layout = {
-        --     
-        -- },
-    }
-
-    s.mywibox = awful.wibar({
-        height = 45,
-        type = "dock",
-        position = "bottom",
-        bg = "transparent",
-        fg = beautiful.fg_normal,
-        screen = s,
-    })
-    
-    s.mywibox:setup {
-        {
-            layout = wibox.layout.stack,
-            {
-                layout = wibox.layout.align.horizontal,
-                {
-                    layout = wibox.layout.fixed.horizontal,
-                    wrap_bg(s.mytaglist),
-                },
-                nil,
-                {
-                    layout = wibox.layout.fixed.horizontal,
-                    spacing = 5,
-                    wrap_bg(bluetooth),
-                    wrap_bg({
-                        layout = wibox.layout.fixed.horizontal,
-                        volume_widget,
-                        custom_widgets.battery(),
-                        spacing = 5 }),
-                    wrap_bg(datetime_widget),
-                },
-            }
-        },
-        margins = 10,
-        widget = wibox.container.margin,
-    }
+    awful.util.spawn_with_shell("~/.config/polybar/launch.sh")
+    -- s.mywibox = awful.wibar({
+    --     height = 45,
+    --     type = "dock",
+    --     position = "bottom",
+    --     bg = "transparent",
+    --     fg = beautiful.fg_normal,
+    --     screen = s,
+    -- })
+    -- 
+    -- s.mywibox:setup {
+    --     {
+    --         layout = wibox.layout.stack,
+    --         {
+    --             layout = wibox.layout.align.horizontal,
+    --             {
+    --                 layout = wibox.layout.fixed.horizontal,
+    --                 wrap_bg(s.mytaglist),
+    --             },
+    --             nil,
+    --             {
+    --                 layout = wibox.layout.fixed.horizontal,
+    --                 spacing = 5,
+    --                 wrap_bg(bluetooth),
+    --                 wrap_bg({
+    --                     layout = wibox.layout.fixed.horizontal,
+    --                     volume_widget,
+    --                     battery,
+    --                     spacing = 5 }),
+    --                 wrap_bg(datetime_widget),
+    --             },
+    --         }
+    --     },
+    --     margins = 10,
+    --     widget = wibox.container.margin,
+    -- }
 end)
 -- }}}
 
@@ -436,7 +410,7 @@ globalkeys = gears.table.join(
                 awful.spawn("rofi -show filebrowser", {
                     placement = awful.placement.centered(),
                     floating = true,
-                    name = "Run application",
+                    name = "Open file brose",
                 })
             end,
               {description = "Spawn quick file browser", group = "launcher"}),
@@ -658,31 +632,6 @@ client.connect_signal("request::titlebars", function(c)
             awful.mouse.client.resize(c)
         end)
     )
-
-    -- awful.titlebar(c) : setup {
-    --     { -- Left
-    --         awful.titlebar.widget.iconwidget(c),
-    --         buttons = buttons,
-    --         layout  = wibox.layout.fixed.horizontal
-    --     },
-    --     { -- Middle
-    --         { -- Title
-    --             align  = "center",
-    --             widget = awful.titlebar.widget.titlewidget(c)
-    --         },
-    --         buttons = buttons,
-    --         layout  = wibox.layout.flex.horizontal
-    --     },
-    --     { -- Right
-    --         awful.titlebar.widget.floatingbutton (c),
-    --         awful.titlebar.widget.maximizedbutton(c),
-    --         awful.titlebar.widget.stickybutton   (c),
-    --         awful.titlebar.widget.ontopbutton    (c),
-    --         awful.titlebar.widget.closebutton    (c),
-    --         layout = wibox.layout.fixed.horizontal()
-    --     },
-    --     layout = wibox.layout.align.horizontal
-    -- }
 end)
 
 -- Enable sloppy focus, so that focus follows mouse.
@@ -693,3 +642,4 @@ end)
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
+

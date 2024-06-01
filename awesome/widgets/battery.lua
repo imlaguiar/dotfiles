@@ -3,6 +3,7 @@ local beautiful = require("beautiful")
 local utils = require("utils")
 local naughty = require("naughty")
 local watch = require("awful.widget.watch")
+local awful = require("awful")
 local option_widget = require("widgets.option_text")
 
 local DEFAULT_OPTS = {
@@ -20,6 +21,7 @@ local DEFAULT_OPTS = {
 local NOTI_TYPE = { NONE = nil, HAPPY = "happy", SAD = "sad", TIRED = "tired", CHARGING = "charging" }
 
 return function(opts)
+
 	opts = utils.misc.tbl_override(DEFAULT_OPTS, opts or {})
 
 	local state = {
@@ -50,12 +52,26 @@ return function(opts)
 
 	local percentage = wibox.container.background(percentage_text)
 
-	local widget = wibox.widget({
-		option_widget("bat"),
-		percentage,
-		spacing = beautiful.spacing,
-		layout = wibox.layout.fixed.horizontal,
-	})
+	local batteryAvailable = true
+	awful.spawn.easy_async_with_shell("acpi --battery", function(_, stderr, _, _)
+		if string.find(stderr, "No support") then
+			batteryAvailable = false
+			if not batteryAvailable then
+				notify("normal", "aaaaaa")
+			end
+		end
+	end)
+
+	local widget = wibox.widget({})
+	if batteryAvailable then
+		widget = wibox.widget({
+			option_widget("bat"),
+			percentage,
+			spacing = beautiful.spacing,
+			layout = wibox.layout.fixed.horizontal,
+		})
+	end
+
 
 	watch("acpi -i", opts.timeout, function(_, stdout)
 		local status, charge_str, _ =
